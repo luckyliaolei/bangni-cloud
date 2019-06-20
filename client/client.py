@@ -7,72 +7,85 @@ import shutil
 import threading
 
 
-
-chunk_size = 8 * 1024 * 1024
+mate_server = 'http://127.0.0.1:5000'
+chunk_size = 8 * 2 ** 20 # 8 MB
 
 
 def usage():
     u = '''
     Name:
-        %s - dayu wechat alert message send interface
+        %s - object storage client
 
     Synopsis:
-        %s [-h] [-u] [-s]
+        %s [-u] [-p]
     Description:
         Arguments are as following
-            -h  print this help message
-            -p  user to send
-            -s  alert message to send
+            -u  username
+            -p  password
     '''
     prog = os.path.basename(sys.argv[0])
     print(u % (prog, prog))
     sys.exit(0)
 
 def list_file():
-    requests.post('http://127.0.0.1:5000/', files={'file': ('haha', open('.viminfo', 'rb'))})
+    s.post(mate_server + '/list', files={'file': ('haha', open('.viminfo', 'rb'))})
 
 
 def upload(filename):
+    r = s.get(mate_server + '/nodes')
+    ips = [row['ip'] for row in r.json()]
+
     f = open(filename)
-    hashs = []
+
+
+    md5 = hashlib.md5()
+    i = 0
     for chunk in iter(lambda: f.read(chunk_size), b''):
-        hashs.append(hashlib.md5(chunk).hexdigest())
-        requests.post('http://127.0.0.1:5000/upload', files={'file': ('haha', open('.viminfo', 'rb'))})
+        md5.update(chunk)
+        r.post(mate_server + '/upload', files={'file': (md5.hexdigest(), chunk)})
+        s.get('http://127.0.0.1:5000/chun', files={'file': ('haha', )})
 
 
 def download(filename):
-    t1 = threading.Thread(target=run_thread, args=(5,))
-    t2 = threading.Thread(target=run_thread, args=(8,))
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
+    #t1 = threading.Thread(target=run_thread, args=(5,))
+
     shutil.copyfileobj()
 
-def delete(filename):
-    requests.post('http://127.0.0.1:5000/upload', })
 
-def login():
+def delete(filename):
+    s.post('http://127.0.0.1:5000/delete', data={'filename': filename})
+
+
+def login(name, passwd):
     s = requests.session()
-    r = s.get('/login', params={'name': 'liao', 'passwd': 'll'})
-    return r.json()
+    r = s.get('/login', params={'name': name, 'passwd': passwd})
+    r = r.json()
+    if r['res']:
+        return s
+    else:
+        print(r['msg'])
+        return False
+
 
 if __name__ == '__main__':
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hp:s:', "help")
+        opts, args = getopt.getopt(sys.argv[1:], 'hu:p:', "help")
     except getopt.GetoptError as e:
         sys.exit(1)
+
+    name = 'liao'
+    passwd = 'll'
 
     for op, value in opts:
         if op in ("-h", "--help"):
             usage()
+        elif op == "-u":
+            name = value
         elif op == "-p":
-            pass
-        elif op == "-s":
-            pass
+            passwd = value
 
-    login()
+    s = login(name, passwd)
 
     while True:
         line = input()
@@ -81,11 +94,15 @@ if __name__ == '__main__':
             sys.exit(0)
         elif cmd == 'ls':
             list_file()
-        elif cmd == 'download':
-            download(op)
-        elif cmd == 'upload':
-            up
-        elif cmd == ''
+        elif cmd == 'down':
+            download(op[1])
+        elif cmd == 'up':
+            upload(op[0])
+        elif cmd == 'rm':
+            delete(op[0])
+        else:
+            print('please input correct commend!')
+
 
 
 

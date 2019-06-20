@@ -1,9 +1,11 @@
 import functools
+import json
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
+from utils import tojson
 from db import users
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -45,18 +47,16 @@ def login():
     user = users.find_one({'name': name, 'passwd': passwd})
     if user:
         session.clear()
-        session['user_id'] = user['id']
-        return 'yes'
+        session['user_id'] = user['_id']
+        return tojson(True, 'ok')
     else:
-        return 'Incorrect'
-
-    return 'ok'
+        return tojson(False, 'password or account is wrong!')
 
 
 @bp.route('/logout')
 def logout():
     """Clear the current session, including the stored user id."""
     session.clear()
-    return 'ok'
+    return tojson(True, 'ok')
 
 

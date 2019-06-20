@@ -1,6 +1,7 @@
 from flask import (
     Blueprint, request
 )
+import os
 
 from auth import login_required
 from db import files, nodes
@@ -19,3 +20,11 @@ def upload():
 def download():
     filename = request.args.get('filename')
     return filename
+
+
+@bp.route('/download', methods=['POST'])
+def delete():
+    chunks = request.form['chunks']
+    for chunk in chunks.split(','):
+        os.remove('chunks/' + chunk)
+    return 'ok'
