@@ -3,7 +3,7 @@ from flask import (
 )
 
 from auth import login_required
-from db import files, nodes, users
+from db import files, nodes, users, chunks
 from utils import tojson
 from bson.objectid import ObjectId
 bp = Blueprint('mate', __name__)
@@ -18,7 +18,7 @@ def hello_world():
 def mate():
     filename = request.args.get('filename')
     users.update_one({'_id': session['user_id']})
-    r = files.insert_one({'filename': filename, 'hash': '', 'chunks': [{'hash': '', 'nodes': []}]})
+    r = files.insert_one({'filename': filename, 'hash': '', 'chunks': []})
     return tojson(True, '', r['_id'].binary.hex())
 
 
@@ -28,9 +28,10 @@ def mate():
     file_id = request.args.get('file_id')
     index = request.args.get('index')
     chunk_hash = request.args.get('chunk_hash')
+    uuid = request.args.get('uuid')
     _id = ObjectId(file_id)
-    files.update_one({'_id': _id}, {'$set': {'chunks.' + index + '.hash': chunk_hash},
-                                    '$push': {'chunks.' + index + '.nodes': request.remote_addr}})
+    files.update_one({'_id': _id}, {'$set': {'chunks.' + index + '.hash': chunk_hash}})
+    chunks.insert_one({'hash': chunk_hash, 'node_uuid': uuid})
     return tojson(True, '')
 
 
