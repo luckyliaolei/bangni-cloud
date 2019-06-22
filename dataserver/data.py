@@ -1,30 +1,37 @@
 from flask import (
-    Blueprint, request
+    request, Flask
 )
 import os
+import requests
+from utils import get_uuid
 
-from auth import login_required
-from db import files, nodes
+app = Flask(__name__)
+mate_server = 'http://127.0.0.1:5000'
+uuid = get_uuid()
+requests.get(mate_server + '/report', params={'uuid': uuid, 'volume': 2**30})
 
-bp = Blueprint('blog', __name__)
 
-
-@bp.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
     f = request.files['file']
     f.save('chunks/' + f.filename)
+    requests.get(mate_server + '/mate/success', params={})
     return 'ok'
 
 
-@bp.route('/download', methods=['POST'])
+@app.route('/download', methods=['POST'])
 def download():
     filename = request.args.get('filename')
     return filename
 
 
-@bp.route('/download', methods=['POST'])
+@app.route('/download', methods=['POST'])
 def delete():
     chunks = request.form['chunks']
     for chunk in chunks.split(','):
         os.remove('chunks/' + chunk)
     return 'ok'
+
+
+if __name__ == '__main__':
+    app.run()
