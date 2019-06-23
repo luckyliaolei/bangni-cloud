@@ -47,7 +47,7 @@ def login():
     user = users.find_one({'name': name, 'passwd': passwd})
     if user:
         session.clear()
-        session['user_id'] = user['_id']
+        session['user_id'] = user['_id'].binary.hex()
         return tojson(True, 'ok')
     else:
         return tojson(False, 'password or account is wrong!')

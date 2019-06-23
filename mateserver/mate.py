@@ -19,54 +19,123 @@ def hello_world():
 @login_required
 def mate():
     filename = request.args.get('filename')
-    users.update_one({'_id': session['user_id']})
-    r = files.insert_one({'filename': filename, 'file_hash': '', 'chunks': [{'chunk_hash': [], 'nodes': []}]})
-    return tojson(True, '', r['_id'].binary.hex())
+    file_hash = request.args.get('file_hash')
+    if not files.find_one({
+                              '_id': file_hash}):
+        files.insert_one({
+                             '_id': file_hash,
+                             'filename': filename,
+                             'chunks': []})  # {chunk_hash: '', nodes: []}
+        users.update_one({
+                             '_id': ObjectId(session['user_id'])}, {
+                             '$push': {
+                                 'files': file_hash}})
+        return tojson(0, '')
+    else:
+        return tojson(1, 'Already have this file')
 
 
 @bp.route('/mate/chunk')
 @login_required
 def chunk():
-    file_id = request.args.get('file_id')
-    index = request.args.get('index')
+    file_hash = request.args.get('file_hash')
+    chunk_index = request.args.get('chunk_index')
     chunk_hash = request.args.get('chunk_hash')
     uuid = request.args.get('uuid')
-    _id = ObjectId(file_id)
-    files.update_one({'_id': _id}, {'$set': {'chunks.' + index + '.chunk_hash': chunk_hash},
-                                    '$push': {'chunks.' + index + '.nodes': uuid}})
+    files.update_one({
+                         '_id': file_hash}, {
+                         '$set': {
+                             'chunks.' + chunk_index: {
+                                 'chunk_hash': chunk_hash}}})
+    files.update_one({
+                         '_id': file_hash}, {
+                         '$push': {
+                             'chunks.' + chunk_index + '.nodes': uuid}})
 
-    nodes.update_one({'uuid': uuid}, {'$push': {'chunks': chunk_hash}})
+    # nodes.update_one({
+    #                      'uuid': uuid}, {
+    #                      '$push': {
+    #                          'chunks': chunk_hash}})
     return tojson(True, '')
 
 
 @bp.route('/mate/success')
 def success():
-    file_id = request.args.get('file_id')
     file_hash = request.args.get('file_hash')
-    _id = ObjectId(file_id)
-    files.update_one({'_id': _id}, {'$set': {'hash': file_hash},
-                                    '$currentDate': {'success_date': True}})
+    files.update_one({
+                         '_id': file_hash}, {
+                         '$currentDate': {
+                             'success_date': True}})
+    users.update_one({
+                         '_id': ObjectId(session['user_id'])}, {
+                         '$push': {
+                             'files': file_hash}})
     return tojson(True, '')
+
+
+@bp.route('/mate/file-mate')
+def file_mate():
+    file_hash = request.args.get('file_hash')
+    r = files.aggregate(
+        [{
+             "$match": {
+                 "_id": file_hash}}, {
+             "$unwind": "$chunks"}, {
+             "$unwind": "$chunks.nodes"},
+         {
+             "$lookup": {
+                 "from": "nodes",
+                 "localField": "chunks.nodes",
+                 "foreignField": "uuid",
+                 "as": "nodes"}},
+         {
+             "$project": {
+                 "_id": 0,
+                 "chunk_hash": "$chunks.chunk_hash",
+                 "nodes": "$nodes.ip"}}])
+    return tojson(True, '', list(r))
+
+
+@bp.route('/mate/delete-file')
+@login_required
+def delfile():
+    file_hash = request.args.get('file_hash')
+    users.update_one({
+            '_id': ObjectId(session['user_id'])}, {
+            '$pullAll': {
+                'files': [file_hash]}})
+    return tojson(1, 'delete success')
 
 
 @bp.route('/report')
 def report():
     volume = request.args.get('volume')
     uuid = request.args.get('uuid')
-    nodes.update_one({'uuid': uuid}, {'$set': {'ip': request.remote_addr,
-                                      'volume': int(volume),
-                                      }}, {'upsert': True})
+    nodes.update_one({
+                         'uuid': uuid}, {
+                         '$set': {
+                             'ip': request.remote_addr,
+                             'volume': int(volume),
+                             }}, upsert=True)
     return tojson(True, '')
 
 
-@bp.route('/nodes')
-def nodes():
-    r = nodes.find({}, {'ip': 1, '_id': 0})
-    return tojson(True, '', r)
+@bp.route('/get-nodes')
+def get_nodes():
+    r = nodes.find({}, {
+        'ip': 1,
+        'uuid': 1,
+        '_id': 0}).limit(10)
+    return tojson(True, '', list(r))
 
 
 @bp.route('/list')
-def list():
-    _id = session['user_id']
-    r = users.find_one({'_id': _id})
-    return tojson(True, '', r['files'])
+def list_user_file():
+    _id = ObjectId(session['user_id'])
+    r = users.find_one({
+                           '_id': _id})
+    r = files.find({
+                       '_id': {
+                           '$in': r['files']}}, {
+                       'filename': 1})
+    return tojson(True, '', list(r))

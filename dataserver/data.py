@@ -5,17 +5,16 @@ import os
 import requests
 from utils import get_uuid
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='chunks')
 mate_server = 'http://127.0.0.1:5000'
 uuid = get_uuid()
-requests.get(mate_server + '/report', params={'uuid': uuid, 'volume': 2**30})
+requests.get(mate_server + '/report', params={'uuid': uuid, 'volume': 2})
 
 
 @app.route('/upload', methods=['POST'])
 def upload():
     f = request.files['file']
     f.save('chunks/' + f.filename)
-    requests.get(mate_server + '/mate/success', params={})
     return 'ok'
 
 
@@ -34,4 +33,4 @@ def delete():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5001)
