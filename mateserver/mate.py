@@ -24,7 +24,7 @@ def mate():
                               '_id': file_hash}):
         return tojson(1, 'success')
 
-    elif users.find({
+    elif users.find_one({
                            'files': {
                                '$all': [file_hash]}}):
         return tojson(2, 'file exist')
@@ -123,7 +123,7 @@ def report():
                              'ip': request.remote_addr,
                              'volume': int(volume),
                              }}, upsert=True)
-    return tojson(True, '')
+    return tojson(True, 'update node ok')
 
 
 @bp.route('/get-nodes')

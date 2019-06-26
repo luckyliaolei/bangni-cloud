@@ -9,7 +9,7 @@ import queue
 import progressbar
 import time
 
-mate_server = 'http://127.0.0.1:5000'
+mate_server = 'http://124.16.70.103:5000'
 chunk_size = 8 * 2 ** 20  # 8 MB
 files = None  # [{'_id': '', 'filename': ''}]
 
@@ -66,6 +66,8 @@ def upload(filename):
     r = r.json()
     if r['res'] is 1:
         return 'upload successful'
+    elif r['res'] is 2:
+        return 'file exist'
 
     q = queue.Queue(2)
 
@@ -149,10 +151,12 @@ def download(index):
 
     return 'download successful'
 
+
 def delete(index):
     r = s.get(mate_server + '/mate/delete-file', params={
         'file_hash': files[index]['_id']})
     return  r.json()['msg']
+
 
 def login(name, passwd):
     s = requests.session()
