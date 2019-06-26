@@ -20,19 +20,25 @@ def hello_world():
 def mate():
     filename = request.args.get('filename')
     file_hash = request.args.get('file_hash')
-    if not files.find_one({
+    if files.find_one({
                               '_id': file_hash}):
-        files.insert_one({
-                             '_id': file_hash,
-                             'filename': filename,
-                             'chunks': []})  # {chunk_hash: '', nodes: []}
-        users.update_one({
-                             '_id': ObjectId(session['user_id'])}, {
-                             '$push': {
-                                 'files': file_hash}})
-        return tojson(0, '')
+        return tojson(1, 'success')
+
+    elif users.find({
+                           'files': {
+                               '$all': [file_hash]}}):
+        return tojson(2, 'file exist')
+
     else:
-        return tojson(1, 'Already have this file')
+        files.insert_one({
+            '_id': file_hash,
+            'filename': filename,
+            'chunks': []})  # {chunk_hash: '', nodes: []}
+        users.update_one({
+            '_id': ObjectId(session['user_id'])}, {
+            '$push': {
+                'files': file_hash}})
+        return tojson(0, '')
 
 
 @bp.route('/mate/chunk')
@@ -139,3 +145,4 @@ def list_user_file():
                            '$in': r['files']}}, {
                        'filename': 1})
     return tojson(True, '', list(r))
+
