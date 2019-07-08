@@ -1,0 +1,15 @@
+{% for item in filter %}
+  <div class="col-auto" data-name="">
+    <label class="sr-only" for="inlineFormInputGroup">Username</label>
+    <div class="input-group mb-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text">{{ item.name }}</div>
+      </div>
+      <select name="{{ item.name }}" id="" class="form-control">
+        {% for option in item.options %}
+            <option value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+{% endfor %}

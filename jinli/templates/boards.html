@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block header %}
+  {{ title }}
+{% endblock %}
+{% block css %}
+  <link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+{% endblock %}
+{% block container %} 
+  <table id="boards"></table>
+  <div class="hide">
+      <div id="task_crl">
+        <button class="btn btn-sm btn-primary new" data-toggle="modal" data-target="#detail_modal" style="margin-left: 10px">
+          添加
+        </button>
+      </div>
+  </div>
+  <div id="detail_modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">添加事件</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+              <form id="event">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">事件涉及时间</label>
+                    <input type="date" name="time" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">主题</label>
+                    <input type="text" name="theme" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleFormControlTextarea1">主题内容</label>
+                      <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputPassword1">操作员</label>
+                      <input type="text" name="operator" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputPassword1">备注</label>
+                      <input type="text" name="comment" class="form-control" id="exampleInputPassword1">
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button id="submit" type="button" data-action="add" class="btn btn-primary event_submit" data-dismiss="modal">确定</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+  </div>
+  <div id="detail_edit" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">编辑事件</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+              <form id="event_edit">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">事件涉及时间</label>
+                    <input type="date" name="time" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">主题</label>
+                    <input type="text" name="theme" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleFormControlTextarea1">主题内容</label>
+                      <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputPassword1">操作员</label>
+                      <input type="text" name="operator" class="form-control" id="exampleInputPassword1">
+                  </div>
+                  <div class="form-group">
+                      <label for="exampleInputPassword1">备注</label>
+                      <input type="text" name="comment" class="form-control" id="exampleInputPassword1">
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button id="submit_edit" type="button" data-action="edit" class="btn btn-primary event_submit" data-dismiss="modal">确定</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+  </div>
+{% endblock %}
+{% block script %}    
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+      $('#boards').bootstrapTable({
+        url: 'data/',
+        striped: true,
+        toolbar: '#task_crl',
+        search: true,
+        toolbarAlign: "right",
+        clickToSelect: true,
+        sortName: 'id',
+        pagination: true,
+        pageSize: 15,
+        pageList: [15, 'All'],
+        columns: [{
+          field: 'time_w',
+          title: '记录时间',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'time',
+          title: '事件涉及时间',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'theme',
+          title: '主题',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'content',
+          title: '主题内容',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'operator',
+          title: '操作员',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'comment',
+          title: '备注',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'operation',
+          title: '编辑',
+          align: 'center',
+          sortable: true,
+          formatter: function(e){
+            return '<i class="far fa-edit edit" role="button"></i> <i class="far fa-trash-alt delete" role="button"></i>'
+          },
+          events: {
+            "click i.edit": function(e, value, row) {
+              for (v in row){
+                $('#detail_edit :input[name=' + v + ']').val(row[v]);
+                $('#submit_edit').off().click(function(){
+                  $.post('data/?action=edit&eid=' + row.id, $('#event_edit').serializeArray(), function(data){
+                    $('#detail_edit').modal('hide');
+                    $('#boards').bootstrapTable('load', data)
+                  }, 'json');
+                });
+              }
+              $('#detail_edit').modal('show');
+            },
+            "click i.delete": function(e, value, row) {
+              $.post('data/?action=remove&eid=' + row.id, function(data){
+                $('#boards').bootstrapTable('load', data)
+              }, 'json');
+            },
+          }
+        }]
+      });
+      $('#submit').click(function(){
+        $.post('data/?action=add', $('#event').serializeArray(), function(data){
+          $('#detail_modal').modal('hide');
+          $('#boards').bootstrapTable('load', data)
+        }, 'json');
+      });
+    </script>
+{% endblock %}

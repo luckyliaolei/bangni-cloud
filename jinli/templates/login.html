@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://getbootstrap.com/docs/4.1/examples/sign-in/ -->
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="/static/images/phkj.jpg">
+
+  <title>Signin Template for Bootstrap</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/static/css/signin.css" rel="stylesheet">
+  <style type="text/css">* {
+    text-shadow: transparent 0px 0px 0px, rgba(0, 0, 0, 0.68) 0px 0px 0px !important;
+  }</style>
+  <script src="/static/js/jquery-3.3.1.min.js"></script>
+</head>
+
+<body class="text-center vsc-initialized">
+<form class="form-signin" method="post">
+  {% csrf_token %}
+  <img class="mb-4" src="/static/images/phkjlogo.png" alt="" width="120" height="120">
+  <h1 class="h3 mb-3 font-weight-normal">自动测试系统</h1>
+  <label for="inputEmail" class="sr-only">用户名</label>
+  <input type="text" name="username" id="inputEmail" class="form-control" placeholder="用户名" required="" autofocus="">
+  <input type="password" name="password" id="inputPassword" class="form-control" placeholder="密码" required="">
+  <p id="prompt" class="text-danger" style="display: none;font-size: 0.5rem;text-align: left;"></p>
+  <input type="button" class="btn btn-lg btn-primary btn-block" id="submit" value="登录"/>
+  <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+</form>
+<script>
+  $('#submit').click(function () {
+    $.post(location.href, $('form').serialize(), function (info) {
+      if (info.res) {
+        location.href = info.data;
+      } else {
+        $('#prompt').text(info.data).show();
+      }
+    }, 'json')
+    $(':input').focus(function () {
+      $('#prompt').hide();
+    })
+  })
+</script>
+
+</body>
+</html>

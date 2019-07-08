@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block container %}
+  <div class="card">
+    <div class="card-body p-5">
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">接口</label>
+            <select class="form-control" id="exampleFormControlSelect1">
+              <option>以太网口测试</option>
+              <option>内部测试</option>
+              <option>接口测试</option>
+              <option>通信测试</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6 pl-5">
+            <label for="inputPassword4">选择开关</label>
+            <div>
+              <div class="form-check d-inline mr-3">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                <label class="form-check-label" for="gridRadios1">
+                  线路一
+                </label>
+              </div>
+              <div class="form-check d-inline">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                <label class="form-check-label" for="gridRadios2">
+                  线路二
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">开始测试</button>
+      </form>
+      <div class="progress mt-4">
+        <div class="progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+             aria-valuemax="100"></div>
+      </div>
+      <pre id="" class="pt-4">asdf
+sdfa
+sdfasd
+asdgasdj</pre>
+      <a href="">下载测试报告</a>
+    </div>
+  </div>
+{% endblock %}
+{% block header %}
+  测试
+{% endblock %}

@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block css %}
+  <link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+{% endblock %}
+{% block container %}
+  <div id="index">
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p>国债期货T1909</p>
+                                    <p>98.23</p>
+                                    <p>+0.215(+0.22%)</p>
+                                </div>
+                                <div class="col">
+                                    <img src="/static/images/trend.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p>中债总财富指数</p>
+                                    <p>187.6</p>
+                                    <p>+0.20(+0.11%)</p>
+                                </div>
+                                <div class="col">
+                                    <img src="/static/images/trend.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p>中证转债</p>
+                                    <p>319.39</p>
+                                    <p>-1.00(-0.31%)</p>
+                                </div>
+                                <div class="col">
+                                    <img src="/static/images/trend.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                       aria-controls="home" aria-selected="true">全部社区</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                       aria-controls="profile" aria-selected="false">交易实战</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                       aria-controls="contact" aria-selected="false">固收工作</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#discussion" role="tab"
+                       aria-controls="contact" aria-selected="false">投资讨论</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <p>最新发布1：工银瑞信基金招聘债券公募基金信评研究员，要求两年以上信评经验，工作地点北京。</p>
+                    <p>最新发布1：工银瑞信基金招聘债券公募基金信评研究员，要求两年以上信评经验，工作地点北京。</p>
+                    <p>最新发布1：工银瑞信基金招聘债券公募基金信评研究员，要求两年以上信评经验，工作地点北京。</p>
+                    <p>最新发布1：工银瑞信基金招聘债券公募基金信评研究员，要求两年以上信评经验，工作地点北京。</p>
+                    <p>最新发布1：工银瑞信基金招聘债券公募基金信评研究员，要求两年以上信评经验，工作地点北京。</p>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                <div class="tab-pane fade" id="discussion" role="tabpanel" aria-labelledby="contact-tab">...</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-3 col-lg-6">
+            <div class="card">
+                <img src="/static/images/counter.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">柜台国债</h5>
+                    <p class="card-text">柜台债券是一种集安全性、流动性和收益性为一体的投资品种。它采取电子记账的方式记录投资人的债权，可以记名、挂失，安全性要远高于无记名的实物券和凭证式国债。</p>
+                </div>
+                <img src="/static/images/review.png" class="card-img-bottom" alt="...">
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <div class="card">
+                <img src="/static/images/exchange.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">交易所债券</h5>
+                    <p class="card-text">交易所债券市场是以非银行金融机构和个人为主体的场内市场，该市场采用连续竞价方式交易，债券的托管与结算都在中国证券登记结算公司。</p>
+                </div>
+                <img src="/static/images/review.png" class="card-img-bottom" alt="...">
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <div class="card">
+                <img src="/static/images/national.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">国债期货</h5>
+                    <p class="card-text">国债期货是指通过有组织的交易场所预先确定买卖价格并于未来特定时间内进行钱券交割的国债派生交易方式。国债期货属于金融期货的一种，是一种高级的金融衍生工具。</p>
+                </div>
+                <img src="/static/images/review.png" class="card-img-bottom" alt="...">
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6">
+            <div class="card">
+                <img src="/static/images/bond.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">转债打新</h5>
+                    <p class="card-text">
+                        柜台债券是一种集安全性、流动性和收益性为一体的投资品种。它采取电子记账的方式记录投资人的债权，可以记名、挂失，安全性要远高于无记名的实物券和凭证式国债。</p>
+                </div>
+                <img src="/static/images/review.png" class="card-img-bottom" alt="...">
+            </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+  <script src="/static/js/bootstrap-table.min.js"></script>
+  <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+  <script>
+    $('#boards').bootstrapTable({
+      url: 'data/',
+      striped: true,
+      toolbar: '#task_crl',
+      toolbarAlign: "right",
+      clickToSelect: true,
+      sortName: 'id',
+      pagination: true,
+      pageSize: 15,
+      pageList: [15, 'All'],
+      columns: [{
+        field: 'time',
+        title: '序号',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'level',
+        title: '开始时间',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'level',
+        title: '结束时间',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'level',
+        title: '负责人',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'msg',
+        title: '接口',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'isread',
+        title: '测试项目',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'isread',
+        title: '测试结果',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'operation',
+        title: '编辑',
+        align: 'center',
+        sortable: true,
+        formatter: function (e) {
+          return '<i class="far fa-edit edit" role="button"></i> <i class="far fa-trash-alt delete" role="button"></i>'
+        },
+        events: {
+          "click i.edit": function (e, value, row) {
+            for (v in row) {
+              $('#detail_modal :input[name=' + v + ']').val(row[v]);
+            }
+            $(':input[name=module]').attr('disabled', true);
+            var filter = JSON.parse(row.filter);
+            var html = '';
+            for (v in filter) {
+              html += '<div class="input-group mb-2">\n' +
+                '      <div class="input-group-prepend">\n' +
+                '        <div class="input-group-text">' + v + '</div>\n' +
+                '      </div>\n' +
+                '      <input name="' + v + '" value="' + filter[v] + '" class="form-control" disabled>\n' +
+                '    </div>';
+            }
+
+            $('#filter').html(html);
+            change_data(function () {
+              $('#detail_modal :input[name=chart]').val(row.chart).change();
+              $('#detail_modal :input[name=variable]').val(row.variable);
+            });
+
+            tos = JSON.parse(row.to);
+            for (i in tos) {
+              $(':checkbox[name=mail][value=' + tos[i] + ']').prop('checked', true);
+            }
+
+            $('#detail_modal').modal('show').find('.modal-title').text('编辑规则');
+            $('#submit').off().click(function () {
+              aperate('edit', row.id)
+            });
+          },
+          "click i.delete": function (e, value, row) {
+            aperate('remove', row.id)
+          },
+        }
+      }]
+    });
+  </script>
+{% endblock %}

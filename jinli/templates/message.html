@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block header %}
+  {{ title }}
+{% endblock %}
+{% block css %}
+  <link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+{% endblock %}  
+{% block container %} 
+  <table id="boards"></table>
+{% endblock %}
+{% block script %}    
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+    <script>
+      $('#boards').bootstrapTable({
+        url: 'data/',
+        striped: true,
+        search: true,
+        toolbarAlign: "right",
+        clickToSelect: true,
+        sortName: 'id',
+        pagination: true,
+        pageSize: 15,
+        pageList: [15, 'All'],
+        columns: [{
+          field: 'time',
+          title: '时间',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'msg',
+          title: '内容',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'level',
+          title: '事件等级',
+          align: 'center',
+          sortable: true,
+        }, {
+          field: 'isread',
+          title: '状态',
+          align: 'center',
+          sortable: true,
+          formatter: function (e) {
+            return e && '已读' || '未读';
+          }
+        }, {
+          field: 'operation',
+          title: '编辑',
+          align: 'center',
+          sortable: true,
+          formatter: function(e, row){
+            return (!row.isread && '<a href="#" class="read">标为已读</a>' || '') + ' <a href="/graph/' + row.module + '/">详情</a>  <a href="#" class="delete" role="button">删除</a>';
+          },
+          events: {
+            "click a.delete": function(e, value, row) {
+              $.post('data/?action=remove&eid=' + row.id, function(data){
+                $('#boards').bootstrapTable('load', data)
+              }, 'json');
+            },
+            "click a.read": function (e, value, row) {
+              $.post('data/?action=read&eid=' + row.id, function (data) {
+                $('#boards').bootstrapTable('load', data)
+              }, 'json');
+              $('#alert_num').text(function () {
+                return $(this).text() - 1 || '';
+              })
+            },
+          }
+        }]
+      });
+      $('#submit').click(function(){
+        $.post('data/?action=add', $('#event').serializeArray(), function(data){
+          $('#detail_modal').modal('hide');
+          $('#boards').bootstrapTable('load', data)
+        }, 'json');
+      });
+    </script>
+{% endblock %}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)https://getbootstrap.com/docs/4.0/examples/dashboard/# -->
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="/static/images/phkj.jpg">
+
+  <title>锦鲤债市</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="/static/css/dashboard.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  {% block css %} {% endblock %}
+  <script src="/static/js/jquery-3.3.1.min.js"></script>
+  <script src="/static/js/popper.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/echarts.min.js"></script>
+</head>
+
+<body class="vsc-initialized">
+  <nav class="navbar sticky-top flex-md-nowrap p-0">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">
+      <img src="/static/images/logo.png" alt="" srcset="">
+    </a>
+    <ul class="navbar-nav px-3" style="flex-direction: row;">
+      <li class="nav-item text-nowrap active">
+          <div class="input-group">
+              <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">@</span>
+              </div>
+              <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+                     aria-describedby="basic-addon1">
+          </div>
+      </li>
+      <li class="nav-item text-nowrap active">
+          <img src="/static/images/user.png" alt="">
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="/" style="font-size: 1rem;">
+                  <img src="/static/images/home.png">
+                主页
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path == '/test/' %} active{% endif %}" href="/test/" style="font-size: 1rem;">
+                  <img src="/static/images/community.png">
+                社区
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path == '/mail/' %} active{% endif %}" href="/mail/"
+                 style="font-size: 1rem;">
+                  <img src="/static/images/market.png">
+                行情
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if request.path == '/rule/' %} active{% endif %}" href="/rule/"
+                 style="font-size: 1rem;">
+                  <img src="/static/images/academy.png">
+                学院
+              </a>
+            </li>
+              <li class="nav-item">
+                  <a class="nav-link{% if request.path == '/rule/' %} active{% endif %}" href="/rule/"
+                     style="font-size: 1rem;">
+                      <img src="/static/images/about.png">
+                      关于锦鲤
+                  </a>
+              </li>
+          </ul>
+        </div>
+      </nav>
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div id="container" class="">
+          {% block container %} {% endblock %}
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  {% block script %} {% endblock %}
+</body>
+
+</html>

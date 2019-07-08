@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block header %}
+  {{ title }}
+{% endblock %}
+{% block css %}
+  <link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+{% endblock %}
+{% block container %}
+  <table id="boards"></table>
+  <div class="hide">
+    <div id="task_crl">
+      <button class="btn btn-sm btn-primary new" data-toggle="modal" data-target="#detail_modal"
+              style="margin-left: 10px">
+        添加
+      </button>
+    </div>
+  </div>
+  <div id="detail_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">添加事件</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <form id="event">
+            <div class="form-group">
+              <label for="exampleInputEmail1">页面</label>
+              <select name="module" class="form-control">
+                {% for graph, module in graphs %}
+                  <option value="{{ module }}">{{ graph }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">筛选</label>
+              <div class="process" id="filter"></div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">图表</label>
+              <select name="chart" class="form-control">
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">监控变量</label>
+              <select name="variable" class="form-control">
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">条件</label>
+              <select name="condition" class="form-control">
+                <option value=">">&gt;</option>
+                <option value="<">&lt;</option>
+                <option value="in">in (阈值使用逗号分隔)</option>
+                <option value="not_in">not in (同上)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">阈值</label>
+              <input type="text" name="threshold" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">接受者</label>
+              <div class="row">
+                <div class="col-sm-12 process" id="mail">
+                  {% for mail in mails %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="checkbox" name="mail" value="{{ mail.id }}">
+                      <label class="form-check-label" for="inlineCheckbox1">{{ mail.name }}</label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="level" value="1">
+            <div class="form-group">
+              <label for="exampleInputPassword1">备注</label>
+              <input type="text" name="comment" class="form-control" id="exampleInputPassword1">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="submit" type="button" data-action="add" class="btn btn-primary event_submit" data-dismiss="modal">
+            确定
+          </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+{% endblock %}
+{% block script %}
+  <script src="/static/js/bootstrap-table.min.js"></script>
+  <script src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+  <script>
+    $('#boards').bootstrapTable({
+      url: 'data/',
+      striped: true,
+      toolbar: '#task_crl',
+      search: true,
+      toolbarAlign: "right",
+      clickToSelect: true,
+      sortName: 'id',
+      pagination: true,
+      pageSize: 15,
+      pageList: [15, 'All'],
+      columns: [{
+        field: 'time',
+        title: '序号',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'level',
+        title: '开始时间',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'level',
+        title: '结束时间',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'level',
+        title: '负责人',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'msg',
+        title: '接口',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'isread',
+        title: '测试项目',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'isread',
+        title: '测试结果',
+        align: 'center',
+        sortable: true,
+      }, {
+        field: 'operation',
+        title: '编辑',
+        align: 'center',
+        sortable: true,
+        formatter: function (e) {
+          return '<i class="far fa-edit edit" role="button"></i> <i class="far fa-trash-alt delete" role="button"></i>'
+        },
+        events: {
+          "click i.edit": function (e, value, row) {
+            for (v in row) {
+              $('#detail_modal :input[name=' + v + ']').val(row[v]);
+            }
+            $(':input[name=module]').attr('disabled', true);
+            var filter = JSON.parse(row.filter);
+            var html = '';
+            for (v in filter) {
+              html += '<div class="input-group mb-2">\n' +
+                '      <div class="input-group-prepend">\n' +
+                '        <div class="input-group-text">' + v + '</div>\n' +
+                '      </div>\n' +
+                '      <input name="' + v + '" value="' + filter[v] + '" class="form-control" disabled>\n' +
+                '    </div>';
+            }
+
+            $('#filter').html(html);
+            change_data(function () {
+              $('#detail_modal :input[name=chart]').val(row.chart).change();
+              $('#detail_modal :input[name=variable]').val(row.variable);
+            });
+
+            tos = JSON.parse(row.to);
+            for (i in tos){
+              $(':checkbox[name=mail][value=' + tos[i] + ']').prop('checked', true);
+            }
+
+            $('#detail_modal').modal('show').find('.modal-title').text('编辑规则');
+            $('#submit').off().click(function () {
+              aperate('edit', row.id)
+            });
+          },
+          "click i.delete": function (e, value, row) {
+            aperate('remove', row.id)
+          },
+        }
+      }]
+    });
+
+    $('#task_crl button').click(function () {
+      $('#detail_modal .modal-title').text('添加规则');
+      $(':input[name=module]').attr('disabled', false).change();
+      $('#submit').off().click(function () {
+        aperate('add')
+      });
+    });
+
+    function aperate(action, eid) {
+      if (action != 'remove' && !$('#event')[0].reportValidity())
+        return;
+      var data = {};
+      $('#event :input:not(.process :input)').each(function () {
+        data[$(this).attr('name')] = $(this).val()
+      });
+      var filter = {}
+      $('#filter :input').each(function () {
+        filter[$(this).attr('name')] = $(this).val()
+      });
+      data.filter = JSON.stringify(filter)
+      data.to = JSON.stringify($('#mail :input:checked').map(function () {
+        return parseInt($(this).val())
+      }).toArray())
+      $.post('data/?action=' + action + '&eid=' + eid, data, function (data) {
+        if (action != 'remove')
+          $('#detail_modal').modal('hide');
+        $('#boards').bootstrapTable('load', data)
+      }, 'json');
+    }
+
+    // refresh option
+    $(':input[name=module]').change(function () {
+      $.get('/rule/var/', {module: $(this).val()}, function (data) {
+        $('#filter').html(data);
+        change_data();
+      })
+    });
+
+    data = {}
+
+    function change_data(call) {
+      var data = {};
+      $('#filter :input').each(function () {
+        data[$(this).attr('name')] = $(this).val();
+      });
+      // get chart data
+      $.post("/rule/var/?module=" + $(':input[name=module]').val(), data,
+        function (data) {
+          var html = '';
+          Object.keys(data).forEach(function (e) {
+            html += '<option value="' + e + '">' + e + '</option>';
+          });
+          $(':input[name=chart]').html(html).off().change(function () {
+            var html = '';
+            data[$(this).val()].forEach(function (e) {
+              html += '<option value="' + e + '">' + e + '</option>';
+            })
+            $(':input[name=variable]').html(html)
+          }).change();
+        }, 'json').done(function () {
+          if (call) call();
+        });
+    }
+
+    $('#filter').on('change', 'select', change_data);
+  </script>
+{% endblock %}
