@@ -1,7 +1,7 @@
 body {
   font-size: .875rem;
   background-color: #edf3f8;
-  font-family: STheiti;
+  font-family: STheiti, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;;
 }
 
 .feather {
@@ -118,4 +118,47 @@ body {
 .card .value{
   color: #ec6d6d;
   font-size: 27px;
+}
+
+.card .mx-auto{
+  width: 226px;
+}
+
+.community{
+  background-color: #0071fe;
+  background-clip: content-box;
+  color: white;
+  font-size: 12px;
+}
+
+.community p{
+  margin-bottom: 8px;
+}
+
+.community .nav-link{
+  color: #49a5e9;
+  padding: .5rem;
+}
+
+.community .nav-link.active{
+  
+background-color: initial;
+  
+color: white;
+  
+border: 0;
+  
+border-bottom: 1px solid;
+}
+
+.production .card-text{
+  color: #93a3c2;
+}
+
+.production .card{
+  height: 100%;
+}
+
+.index .card-body{
+  margin: 75px 15px;
 }
