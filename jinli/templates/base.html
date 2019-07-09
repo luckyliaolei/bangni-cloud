@@ -27,16 +27,16 @@
 
 <body class="vsc-initialized">
   <nav class="navbar sticky-top flex-md-nowrap p-0">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">
+    <a class="navbar-brand text-center" href="/">
       <img src="/static/images/logo.png" alt="" srcset="">
     </a>
     <ul class="navbar-nav px-3" style="flex-direction: row;">
       <li class="nav-item text-nowrap active">
-          <div class="input-group">
+          <div class="input-group" style="margin-top: 10px;">
               <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon1">@</span>
+                  <span class="input-group-text" id="basic-addon1"><img src="/static/images/search.png" style="width: 1.4rem;" alt=""></span>
               </div>
-              <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+              <input type="text" class="form-control" placeholder="Search" aria-label="Username"
                      aria-describedby="basic-addon1">
           </div>
       </li>
@@ -48,47 +48,47 @@
 
   <div class="container-fluid">
     <div class="row">
-      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <nav class="col-md-auto bg-light sidebar">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item">
               <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="/" style="font-size: 1rem;">
                   <img src="/static/images/home.png">
-                主页
+                <span>主页</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link{% if request.path == '/test/' %} active{% endif %}" href="/test/" style="font-size: 1rem;">
                   <img src="/static/images/community.png">
-                社区
+                <span>社区</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link{% if request.path == '/mail/' %} active{% endif %}" href="/mail/"
                  style="font-size: 1rem;">
                   <img src="/static/images/market.png">
-                行情
+                <span>行情</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link{% if request.path == '/rule/' %} active{% endif %}" href="/rule/"
                  style="font-size: 1rem;">
                   <img src="/static/images/academy.png">
-                学院
+                <span>学院</span>
               </a>
             </li>
               <li class="nav-item">
                   <a class="nav-link{% if request.path == '/rule/' %} active{% endif %}" href="/rule/"
                      style="font-size: 1rem;">
                       <img src="/static/images/about.png">
-                      关于锦鲤
+                    <span>关于锦鲤</span>
                   </a>
               </li>
           </ul>
         </div>
       </nav>
 
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+      <main role="main" class="col pt-3 px-4" style="margin-left: 150px;">
         <div id="container" class="">
           {% block container %} {% endblock %}
         </div>

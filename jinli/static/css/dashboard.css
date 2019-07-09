@@ -1,6 +1,7 @@
 body {
   font-size: .875rem;
   background-color: #edf3f8;
+  font-family: STheiti;
 }
 
 .feather {
@@ -32,12 +33,16 @@ body {
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
   background-color: #0071fe;
+  width: 150px;
 }
 
 .sidebar .nav-link {
   font-weight: 500;
   color: #fff;
+  padding: 15px 18px;
 }
+
+.sidebar .nav-link span{font-size: 0.9rem;vertical-align: middle;padding-left: 5px;display:inline-block;}
 
 .sidebar .nav-link .feather {
   margin-right: 4px;
@@ -64,8 +69,8 @@ body {
  */
 
 .navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  width: 150px;
+  padding-top: 21px;
   font-size: 1rem;
   background-color: #0071fe;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
@@ -101,3 +106,16 @@ body {
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.card .debt{
+  font-weight: bold;
+}
+
+.card .rate{
+  color: #ec6d6d;
+}
+
+.card .value{
+  color: #ec6d6d;
+  font-size: 27px;
+}
